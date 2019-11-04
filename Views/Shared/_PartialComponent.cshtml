@@ -1,0 +1,151 @@
+﻿<!--頁面大區塊-->
+<template id="sectionEdit">
+    <div class="section-edit">
+        <div class="section-title"><div class="point">●</div><span v-text="title"></span></div>
+        <slot></slot>
+    </div>
+</template>
+
+<!--頁面小區塊-->
+<template id="sectionBoxArea">
+    <div class="section-box-area">
+        <div class="box-area-title sub-id-flag"><b class="sub-title-flag" v-text="title"></b></div>
+        <div class="box">
+            <slot></slot>
+        </div>
+    </div>
+</template>
+
+<!--form 基本控件-->
+<template id="textbox">
+    <input class="input" v-bind:class="{h30:small}" v-model="val" v-on:keypress="checkNum($event)">
+</template>
+
+<template id="textnumber">
+   <input class="input" v-bind:class="{h30:small}" v-model="val" placeholder="placeHolder">
+</template>
+
+<template id="textareabox">
+    <textarea type="text" class="input h38" v-model="val" placeholder=""></textarea>
+</template>
+
+<template id="selectpicker">
+    <select v-bind:id="myid" v-model="val" v-on:change="change($event)" data-hide-disabled="true" data-size="10" tabindex="-98" class="selectpicker show-tick form-control " class="[small ? selectH30:selectH38]" data-live-search="true" title="請選擇">
+        <option selected value="-1">取消選擇</option>
+            <option v-for="item in items" v-bind:key="item.value" v-bind:value="item.value" v-text="item.text"></option>
+    </select>
+</template>
+
+<template id="datepicker">
+    <div class='w100 input-group date01 custom-input datetimepicker1' v-bind:id="myid" ref="date">
+        <input type='text' class="input" v-bind:class="{'h30':small}" placeholder="yyyy/mm/dd" v-model="val" />
+        <span class="input-group-addon d-input" v-bind:class="{'addon-table':small}">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+</template>
+
+<template id="radiobutton">
+    <div class="cell-box-1">
+        <div class="cell"><label><input v-bind:name="myid" type="radio" value="true" v-model="val"><span class="success-text">成功 : </span>說明文字。</label></div>
+        <div class="cell"><label><input v-bind:name="myid" type="radio" value="false" v-model="val"><span class="fail-text">失敗 : </span>說明文字。</label></div>
+    </div>
+</template>
+
+<template id="checkbox">
+    <label><input v-bind:id="myid" v-model="val" type="checkbox"><span class="checkbox-text" v-text="myTitle"></span></label>
+</template>
+
+<template id="buttonaction">
+    <div class="area-btn-right-1">
+        <a class="btn-left" v-bind:class="bgColor" v-on:click="$emit('click')">
+            <div class="bt-icon-size" v-bind:class="iconName"></div>
+            <slot></slot>
+        </a>
+    </div>
+</template>
+
+<template id="disabletext">
+    <div class="disable-text" v-if="text === undefined || text === ''">
+        <span class="undone-text">{{placeHolder}}</span>
+    </div>
+    <div class="disable-text" v-else>
+        {{text}}
+    </div>
+</template>
+
+<template id="linkspeo">
+    <div class="area-fix02-2">
+        <div class="Links" v-show="!empty">
+            <div class="Links-peo">
+                <span v-text="text"></span>
+                <div class="XX01" v-on:click="remove()"><i class="glyphicon glyphicon-remove"></i></div>
+            </div>
+        </div>
+        <div class="no-file-text" v-show="empty"><b>- 選擇1位人員 -</b></div>
+    </div>
+</template>
+
+
+<!--按鈕區塊定義IE11無法使用-->
+<template id="button-col-area">
+    <div v-bind:class="[wid]" class="content-box">
+        <div class="title"></div>
+        <div class="area-1">
+            <div class="area-btn-right-1" v-for="list in lists">
+                <a v-bind:class="list.color"  class="btn-left" v-bind:id="list.id">
+                    <div v-bind:class="list.icon" class="bt-icon-size"></div>{{list.text}}
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--訊息確認視窗-->
+<template id="remodal">
+    <div class="remodal" v-bind:data-remodal-id="remodalId" v-bind:id="remodalId" role="dialog"
+         aria-labelledby="modal1Title" aria-describedby="modal1Desc" tabindex="-1">
+        <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+        <div class="col-sm-12">
+            <span id="modal1Title" class="popup-title-left" v-text="title"></span>
+        </div>
+        <div class="popup-box">
+            <slot></slot>
+        </div>
+        <div class="col-sm-12">
+            <div class="popup-btn-row">
+                <a data-remodal-action="cancel" class="remodal-cancel-btn" v-on:click="cancel($event)">取消</a>
+                <a data-remodal-action="confirm" class="remodal-confirm-btn" v-on:click="confirm($event)">確認</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--顯示全部或隱藏全部-->
+<template id="showall">
+    <div class="btn-01-add">
+        <a class="p-all0" v-on:click="setAllOpenStatus()">
+            <div v-bind:class="[open?'list-close-icon':'list-open-icon']"></div>
+        </a>
+    </div>
+</template>
+
+<!--顯示明細或隱藏明細-->
+<template id="showdetail">
+    <div class="btn-01-add ExpandDetail">
+        <a v-on:click="setDetailOpenStatus()">
+            <div class="glyphicon toggleArrow"
+                 v-bind:class="[isDetailOpen?'glyphicon-chevron-up':'glyphicon-chevron-down']">
+            </div>
+        </a>
+    </div>
+</template>
+
+<!--顯示最底層明細或隱藏最底層明細-->
+<template id="showsubdetail">
+    <div class="btn-01-add float-right">
+        <a v-on:click="setSubOpenStatus()">
+            <span v-text="isSubOpen?'收合':'展開'"></span>
+        </a>
+    </div>
+</template>

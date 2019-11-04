@@ -1,0 +1,165 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>OA表單管理系統</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/ESUN.ico">
+    <meta http-equiv="x-ua-compatible" content="IE=Edge">
+    <link href="~/css/icon-style.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-3.3.6.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <!-- datetimepicker -->
+    <link rel="stylesheet" href="~/css/bootstrap-select.css">
+    <link href="~/css/remodal-default-theme.css" rel="stylesheet">
+    <link href="~/css/remodal.css" rel="stylesheet">
+    <link href="~/css/form.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/index.css" rel="stylesheet" />
+    <link href="~/css/myStyle.css" rel="stylesheet" />
+    <style>
+        div {
+            word-break: break-all;
+        }
+         [v-cloak] {
+             display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-to-top" href="#syi"><i class="glyphicon glyphicon-menu-up"></i></a>
+    <div class="index-content">
+        <div class="index-nav">
+            <div class="nav-logo-box">
+                <a href="">
+                    <div class="index-logo-icon"></div>
+                    <h1 class="index-logo-title">OA表單管理系統</h1>
+                </a>
+            </div>
+
+            <div class="nav-info-box">
+                <p><span class="glyphicon glyphicon-user nav-icon-size-peo"></span></p>
+                <p class="sign-out"><a href=""><span class="glyphicon glyphicon-cog nav-icon-size-time"></span>管理中心</a></p>
+                <p></p>
+            </div>
+        </div>
+        <div class="main-right-box main-right-box-w100">
+            <div class="main-content-box">
+                <div class="main-breadcrumb-box">
+                    <ol class="breadcrumb">
+                        <!-- @{
+                            if (ViewBag.Breadcrumb != null && ViewBag.Breadcrumb.Count > 0)
+                            {
+                                foreach (var item in (Dictionary<string, string>)ViewBag.Breadcrumb)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(item.Value))
+                                    {
+                                        <li><a href="@item.Value">@item.Key</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="active">@item.Key</li>
+                                    }
+                                }
+                            }
+                        } -->
+                    </ol>
+                </div>
+                @RenderBody()
+            </div>
+        </div>
+        <footer></footer>
+    </div>
+    <partial name="_PartialComponent.cshtml" ></partial>
+    <div class="remodal remodal-small" data-remodal-id="alert-modal" data-remodal-options="closeOnEscape: false,closeOnOutsideClick : false,hashTracking:false" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+        <button data-remodal-action="close" class="remodal-close" aria-label="Close"></button>
+        <div class="col-sm-12">
+            <span id="modal1Title" class="popup-title-center">輔助說明</span>
+        </div>
+        <div class="col-sm-12">
+            <span class="popup-text-left" id="alertText"></span>
+        </div>
+        <div class="area-btn-center-box">
+            <div class="area-btn-center">
+                <b class="w100"></b>
+            </div>
+        </div>
+        <div class="area-btn-center-box">
+
+            <div class="area-btn-center">
+                <b class="w100">
+                    <a data-remodal-action="confirm" id="alertOK">確認</a>
+                </b>
+            </div>
+        </div>
+    </div>
+    <div class="remodal remodal-small" data-remodal-options="closeOnEscape:false,closeOnOutsideClick:false,hashTracking:false" data-remodal-id="confirm-modal" role="dialog" aria-labelledby="modal1Title" aria-describedby="modal1Desc">
+        <button data-remodal-action="close" class="remodal-close" id="confirmClose" aria-label="Close"></button>
+        <div class="col-sm-12">
+            <span id="confirmText" class="popup-title-left"></span>
+        </div>
+        <div class="col-sm-12">
+            <div class="popup-btn-row">
+                <a data-remodal-action="cancel" id="confirmEsc" class="remodal-cancel-btn">取消</a>
+                <a data-remodal-action="confirm" id="confirmOK" class="remodal-confirm-btn">確認</a>
+            </div>
+        </div>
+    </div>
+
+    <!--取代alert()用-->
+    <script src="~/lib/jquery-1.11.2.min.js"></script>
+    <script src="~/lib/accounting.min.js"></script><!--浮點數運算及數字格式-->
+    <script src="~/lib/moment.js"></script><!-- 時間 -->
+    <script src="~/lib/date-time-setting.js"></script> <!-- 時間數字顯示設定 -->
+    <script src="~/lib/remodal.min.js"></script>
+    <script src="~/lib/popup.js"></script>
+    <script src="~/lib/bootstrap-select.js"></script><!-- 可輸入下拉選單 -->
+    <script src="~/lib/jquery.blockUI.js"></script>
+    <script src="~/lib/JQorgpick.js"></script><!--人員組織樹-->
+    <script src="~/lib/erpTools.js"></script><!--工具傳送門-->
+    <script src="~/lib/underscore-1.9.1.js"></script>
+    <script src="~/lib/vue2.6.10.js"></script>
+    <script src="~/lib/es6-promise.auto.js"></script>
+    <script src="~/lib/vuelidate.min0.7.3.js"></script>
+    <script src="~/lib/validators.min0.7.3.js"></script>
+    <script src="~/lib/vuex3.1.1.js"></script>
+    <script src="~/js/cbp-blockPage.js"></script>
+    <script src="~/js/cbp-OptionSelect.js"></script>
+    <script src="~/js/index.js"></script>
+    <script src="~/js/back-to-top-index.js"></script>
+    <script src="~/js/ArrayImplement.js"></script>
+    <script src="~/js/component.js"></script><!--自定義元件-->
+    <script src="~/lib/bootstrap-datetimepicker.js"></script>
+    <script src="~/lib/bootstrap-3.3.4.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script type="text/javascript">
+    _OrgpickerURL = '@ViewBag.OrgPickerURL';
+    // blockPage("資料讀取中");
+    // $(window).load(function () {
+    //    blockPage('');
+    // })
+
+    function alertopen(text) {
+        /// <summary>偉大的UI/UX說不要用醜醜的原生alert，改用remodal</summary>
+        /// <param name="text" type="string or array">你想顯示給北七使用者的文字</param>
+
+        //$('#alertOK').unbind();
+        $('#alertText').empty();
+        if (typeof (text) != typeof ([])) {
+            $('#alertText').text(text);
+            $('[data-remodal-id=alert-modal]').remodal().open();
+        }
+        else {
+            if (text.length < 1) {
+                return;
+            }
+            $('#alertText').append(text.join("<br>"));
+
+            $('[data-remodal-id=alert-modal]').remodal().open();
+            //$('#alertOK').on('click', alertopen);
+        }
+    }
+</script>

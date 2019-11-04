@@ -1,0 +1,42 @@
+.w2 {
+    width: 2%;
+}
+
+.w3 {
+    width: 3%;
+}
+
+.w4 {
+    width: 4%;
+}
+
+.w7 {
+    width: 7%;
+}
+
+.w8 {
+    width: 8%;
+}
+
+.w12 {
+    width: 12%;
+}
+
+.w14 {
+    width: 14%;
+}
+
+.w16 {
+    width: 16%;
+}
+
+.w18 {
+    width: 18%;
+}
+
+.liauto {
+    display: inline-block;
+    width: inherit;
+    height: auto;
+    text-align: center;
+}

@@ -1,0 +1,150 @@
+﻿<!--請購明細查詢結果-->
+<template id="PRDetailTable">
+    <table class="table table-hover m-top10 table-bordered tbody-hover-outline">
+        <thead>
+            <tr>
+                <th class="th-title w5">選擇</th>
+                <th class="th-title w12">請購單號</th>
+                <th class="th-title w12">報價單號</th>
+                <th class="th-title">採購分類</th>
+                <th class="th-title w25">品名描述</th>
+                <th class="th-title w10">數量</th>
+                <th class="th-title w10">單位</th>
+                <th class="th-title w10">
+                    最低報價
+                    <show-all v-bind:open.sync="isAllOpen" v-on:accept="setAllOpenStatus"></show-all>
+                </th>
+            </tr>
+        </thead>
+        <tbody v-for="item in purchaseDatas">
+            <tr>
+                <td class="DetailSerno" rowspan="200">
+                    <input type="checkbox" class="DetailCheckbox" v-model="item.sel" />
+                </td>
+                <td v-text="item.prNum"></td>
+                <td v-text="item.quoteNum"></td>
+                <td v-text="item.category"></td>
+                <td v-text="item.itemDescription"></td>
+                <td v-text="item.amount"></td>
+                <td v-text="item.unitName"></td>
+                <td>
+                    {{item.minQuote?'是':'否'}}
+                    <show-detail v-bind:is-detail-open="item.isDetailOpen" v-on:click="item.isDetailOpen = !item.isDetailOpen"></show-detail>
+                </td>
+            </tr>
+            <tr v-show="item.isDetailOpen">
+                <th class="th-title-1">幣別</th>
+                <th class="th-title-1" colspan="2">原幣報價單價</th>
+                <th class="th-title-1">報價經辦</th>
+                <th class="th-title-1" colspan="3">發票管理人</th>
+            </tr>
+            <tr v-show="item.isDetailOpen">
+                <td v-text="item.currency"></td>
+                <td colspan="2" v-text="item.originalQuote"></td>
+                <td v-text="item.quoteEmp"></td>
+                <td colspan="3" v-text="item.invoiceEmp"></td>
+            </tr>
+            <tr v-show="item.isDetailOpen">
+                <th class="th-title-1" colspan="2">送貨數量</th>
+                <th class="th-title-1" colspan="2">掛帳單位</th>
+                <th class="th-title-1" colspan="3">
+                    收貨單位
+                    <show-subdetail v-bind:is-sub-open="item.isSubOpen" v-on:click="item.isSubOpen = !item.isSubOpen"></show-subdetail>
+                </th>
+            </tr>
+            <tr class="InnerDetailShowBar" v-show="item.isDetailOpen && !item.isSubOpen">
+                <td colspan="7" class="text-center">
+                    <b class="undone-text">請展開檢視更多項目...</b>
+                </td>
+            </tr>
+            <tr v-for="(subitem,index) in item.subDatas" v-show="item.isDetailOpen && item.isSubOpen">
+                <td colspan="2">
+                    <input type="checkbox" class="InnerDetailCheckbox" v-model="subitem.raChk"
+                           v-on:change="deliveryChange(item,subitem)" />{{subitem.receiveAmount}}
+                </td>
+                <td colspan="2" v-text="subitem.paymentDep"></td>
+                <td colspan="3" v-text="subitem.receiveDep"></td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<!--採購明細-->
+<template id="PODetailBlock">
+    <div>
+        <div class="row">
+            <div class="col-sm-4 content-box">
+                <div class="w100 title">採購總金額</div>
+                <disable-text text="" place-holder="系統自動帶入"></disable-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 content-box">
+                <div class="w100 title">明細表</div>
+            </div>
+            <table class="table table-hover table-bordered tbody-hover-outline">
+                <thead>
+                    <tr>
+                        <th class="th-title w5">編號</th>
+                        <th class="th-title">採購分類</th>
+                        <th class="th-title w25">品名描述</th>
+                        <th class="th-title w10">數量</th>
+                        <th class="th-title w5">單位</th>
+                        <th class="th-title w15">議價單價</th>
+                        <th class="th-title w15">
+                            明細金額
+                            <show-all v-bind:open="isAllOpen" v-on:accept="setAllOpenStatus"></show-all>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody v-for="(item,index) in poDatas">
+                    <tr>
+                        <td rowspan="999" class="DetailSerno text-center" v-text="index + 1"></td>
+                        <td v-text="item.category"></td>
+                        <td v-text="item.itemDescription"></td>
+                        <td v-text="item.amount"></td>
+                        <td v-text="item.unitName">張</td>
+                        <td>
+                            <input type="text" class="input h30" placeholder="請輸入金額" />
+                        </td>
+                        <td>
+                            <b class="undone-text">系統自動帶入</b>
+                            <show-detail v-bind:is-detail-open="item.isDetailOpen" v-on:click="item.isDetailOpen = !item.isDetailOpen"></show-detail>
+                        </td>
+                    </tr>
+                    <tr v-show="item.isDetailOpen">
+                        <th class="th-title-1" colspan="2">原幣報價單價</th>
+                        <th class="th-title-1" colspan="4">最低報價</th>
+                    </tr>
+                    <tr v-show="item.isDetailOpen">
+                        <td colspan="2" v-text="item.originalQuote"></td>
+                        <td colspan="4" v-text="item.minQuote?'是':'否'"></td>
+                    </tr>
+                    <tr v-show="item.isDetailOpen">
+                        <th class="th-title-1">送貨數量</th>
+                        <th class="th-title-1">明細金額</th>
+                        <th class="th-title-1" colspan="2">掛帳單位</th>
+                        <th class="th-title-1" colspan="2">
+                            收貨單位
+                            <show-subdetail v-bind:is-sub-open="item.isSubOpen" v-on:click="item.isSubOpen = !item.isSubOpen"></show-subdetail>
+                        </th>
+                    </tr>
+                    <tr v-show="item.isDetailOpen && !item.isSubOpen">
+                        <td colspan="6" class="text-center">
+                            <b class="undone-text">請展開檢視更多項目...</b>
+                        </td>
+                    </tr>
+                    <tr v-for="(subitem,index) in item.subDatas" v-show="item.isDetailOpen && item.isSubOpen && subitem.raChk">
+                        <td>
+                            <input type="text" placeholder="請輸入數量" class="input h30" v-model="subitem.receiveAmount" />
+                        </td>
+                        <td>
+                            <b class="undone-text">系統自動帶入</b>
+                        </td>
+                        <td colspan="2" v-text="subitem.paymentDep"></td>
+                        <td colspan="2" v-text="subitem.receiveDep"></td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+</template>

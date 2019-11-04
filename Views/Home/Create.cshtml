@@ -1,0 +1,166 @@
+﻿<section-edit title="文件資訊" id="InformationSection">
+    <box title="請購單查詢明細區">
+        <div class="row">
+            <div class="col-sm-3 content-box">
+                <div class="w100 title"><b class="float-left">供應商</b><b class="required-icon">*</b></div>
+                <disable-text place-holder="請點選右方【選擇】鈕選擇供應商" v-bind:text.sync="supplierName"></disable-text>
+            </div>
+            <div class="col-sm-1 content-box">
+                <div class="w100 title">
+                    <b class="float-left">選擇</b>
+                </div>
+                <remodal remodal-id="remodal-02" title="供應商查詢" v-on:accept="acceptResult">
+                    <div class="col-sm-12 m-top10">
+                        <selecter v-model="supplier" v-bind:option-data="supplierDatas" v-on:change="supplierChange($event)"
+                                  v-bind:small-size=true>
+                        </selecter>
+                    </div>
+                </remodal>
+                @*<button-action bgColor="btn-02-blue" iconName="icon-search" v-on:click="openRemodal('remodal-02')">
+                    選擇
+                </button-action>*@
+                    <div class="area-1">
+                        <div class="area-btn-right-1">
+                            <a class="btn-02-blue btn-left" v-on:click="openRemodal('remodal-02')">
+                                選擇
+                            </a>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm-8 content-box">
+                <div class="w100 title"><b class="float-left">發票地點</b><b class="required-icon">*</b></div>
+                <div class="w100 text-box">
+                    <selecter v-model="seletData" v-bind:option-data="addressDatas" v-on:change="addressChange($event)">
+                    </selecter>
+                </div>
+            </div>
+        </div>
+        <transition name="fade">
+            <div class="row" v-show="supplierResult">
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title"><b class="float-left">請購單號</b></div>
+                    <div class="w100 text-box">
+                        <selecter v-model="prNum" v-bind:option-data="prDatas"></selecter>
+                    </div>
+                </div>
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title"><b class="float-left">報價經辦</b></div>
+                    <div class="w100 text-box">
+                        <selecter v-model="quoteEmp" v-bind:option-data="quoteDatas"></selecter>
+                    </div>
+                </div>
+                <div class="col-sm-4 content-box">
+                    <div class="w100 title">
+                        <b class="float-left">請購單品名描述</b>
+                    </div>
+                    <text-string v-model="itemDescription" place-holder="請填寫品名描述"></text-string>
+                </div>
+                <div class="col-sm-2 content-box">
+                    <div class="title"></div>
+                    <div class="area-1">
+                        <button-action icon-name="glyphicon glyphicon-remove" bg-color="btn-02-gray btn-left">
+                            清除
+                        </button-action>
+                        <button-action icon-name="icon-search" bg-color="btn-02-blue btn-left" v-on:click="search()">
+                            查詢
+                        </button-action>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </box>
+    <transition name="fade">
+        <box title="查詢結果" v-show="searchResult">
+            <div class="row">
+                <div class="col-sm-12 content-box">
+                    <div class="w100 title m-top10">
+                        <b class="float-left">請購單明細</b>
+                    </div>
+                    <pr-table v-bind:open="isAllOpen" v-bind:purchase-datas="purchaseDatas"></pr-table>
+                        <div class="btn-02-add" v-on:click="genPo()">
+                            <a>
+                                <p><b>建立明細</b></p>
+                            </a>
+                        </div>
+                        <pre style="margin-top: 25px" v-show="trace">{{this.purchaseDatas}}</pre>
+                </div>
+            </div>
+        </box>
+    </transition>
+    <transition name="fade">
+        <box title="採購資訊區" v-show="PO">
+            <div class="row">
+                <div class="col-sm-4 content-box">
+                    <div class="w100 title"><b class="float-left">供應商</b></div>
+                    <disable-text text="家樂福(12345)"></disable-text>
+                </div>
+                <div class="col-sm-8 content-box">
+                    <div class="w100 title"><b class="float-left">發票地點</b></div>
+                    <disable-text text="10491台北市中山區撫順街41巷13號"></disable-text>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 content-box">
+                    <div class="w100 title">聯絡人</div>
+                    <text-string place-holder="請填寫聯絡人資訊"></text-string>
+                </div>
+                <div class="col-sm-4 content-box">
+                    <div class="w100 title">聯絡人郵件地址</div>
+                    <text-string place-holder="請填寫郵件地址"></text-string>
+                </div>
+                <div class="col-sm-4 content-box">
+                    <div class="w100 title">採購日期</div>
+                    <date-picker v-model="PoDate"></date-picker>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title"><b class="float-left">請購單號</b></div>
+                    <disable-text text="PR201801010001"></disable-text>
+                </div>
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title"><b class="float-left">報價單號</b></div>
+                    <disable-text text="QO201802010001"></disable-text>
+                </div>
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title">報價單幣別</div>
+                    <disable-text text="USD"></disable-text>
+                </div>
+                <div class="col-sm-3 content-box">
+                    <div class="w100 title"><b class="float-left">發票管理人</b><b class="required-icon">*</b></div>
+                    <div id="invoice" class="area-1">
+                        <links-peo v-bind:sel-text="invoiceEmp"></links-peo>
+                        <button-action bg-color="btn-02-blue" icon-name="icon-plus" v-on:click="openRemodal('remodal-03')">選擇人員</button-action>
+                        <remodal remodal-id="remodal-03" title="發票管理人查詢" v-on:accept="acceptEmpResult">
+                            <div class="col-sm-12 m-top10">
+                                <selecter v-model="invoiceEmpId" v-bind:option-data="invoiceDatas" v-on:change="invoiceChange($event)" v-bind:small-size="false"></selecter>
+                            </div>
+                        </remodal>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 content-box">
+                    <div class="w100 title">
+                        採購備註<br>
+                    </div>
+                    <textarea class="tt" placeholder="請填寫採購備註(限1000字內)"></textarea>
+                </div>
+            </div>
+        </box>
+    </transition>
+    <transition name="fade">
+    <box title="採購明細區" v-show="PODetail">
+        <po-detail v-bind:open="isPoAllOpen" v-bind:po-datas="noDelDataSelected">
+        </po-detail>
+    </box>
+    </transition>
+</section-edit>
+
+<partial  name="_CreatePartial"></partial>
+@section scripts
+{
+    <script src="~/js/Home/store.js"></script>
+    <script src="~/js/Home/create.js"></script>
+}
+
